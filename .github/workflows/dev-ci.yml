@@ -5,42 +5,36 @@ on:
     branches:
       - main
 
-env:
-  REPO_NAME: poridhi
-  IMAGE_NAME: todo-backend
-  VERSION: 2.1
-
 jobs:
   build-and-push:
     runs-on: arc-runner-set
     
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Generate dynamic tag
-        id: tag
+      # Step 2: Install make
+      - name: Install make
         run: |
-          DYNAMIC_TAG="v${VERSION}.${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}"
-          echo "DYNAMIC_TAG=${DYNAMIC_TAG}" >> $GITHUB_ENV
-          echo "Generated tag: ${DYNAMIC_TAG}"
+          sudo apt-get update
+          sudo apt-get install -y make
 
+      # Step 4: Login to DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Step 5: Build and Push using Makefile with dynamic tag
       - name: Build and Push Docker image
         run: |
-          # Build the image
-          docker build -t ${REPO_NAME}/${IMAGE_NAME}:${DYNAMIC_TAG} -t ${REPO_NAME}/${IMAGE_NAME}:latest .
-          
-          # Push the images
-          docker push ${REPO_NAME}/${IMAGE_NAME}:${DYNAMIC_TAG}
-          docker push ${REPO_NAME}/${IMAGE_NAME}:latest
+          make build-push
 
+      # Step 6: Print success message
       - name: Print success message
         run: |
           echo "Successfully built and pushed Docker image"
-          echo "Image: ${REPO_NAME}/${IMAGE_NAME}:${DYNAMIC_TAG}"
+          echo "Run number: ${GITHUB_RUN_NUMBER}"
+          echo "Commit SHA: ${GITHUB_SHA::7}"
