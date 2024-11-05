@@ -8,7 +8,7 @@ on:
 env:
   REPO_NAME: poridhi
   IMAGE_NAME: todo-backend
-  VERSION: 2.1
+  VERSION: 1.1
 
 jobs:
   build-and-push:
@@ -19,34 +19,42 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Generate dynamic tag
+      # Step 2: Install make
+      - name: Install make
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y make
+
+      # Step 3: Generate dynamic tag
       - name: Generate dynamic tag
         id: tag
         run: |
-          # Combine version, run number, and short SHA
           DYNAMIC_TAG="v${VERSION}.${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}"
           echo "DYNAMIC_TAG=${DYNAMIC_TAG}" >> $GITHUB_ENV
           echo "Generated tag: ${DYNAMIC_TAG}"
 
-      # Step 3: Login to DockerHub
+      # Step 4: Login to DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Step 4: Build and Push using Makefile with dynamic tag
+      # Step 5: Build and Push using Makefile with dynamic tag
       - name: Build and Push Docker image
         run: |
+          # Verify make is installed
+          make --version
+          
           # Export variables for Makefile
           export repo_name=${REPO_NAME}
           export image_name=${IMAGE_NAME}
           export tag=${DYNAMIC_TAG}
           
-          # Run make command
-          make build-push
+          # Run make command with verbose output
+          make -v build-push
 
-      # Step 5: Print success message with tag information
+      # Step 6: Print success message
       - name: Print success message
         run: |
           echo "Successfully built and pushed Docker image"
