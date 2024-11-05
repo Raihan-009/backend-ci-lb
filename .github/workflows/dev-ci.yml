@@ -1,10 +1,10 @@
-name: Actions Runner Controller Demo
-on:
-  workflow_dispatch:
-
+# In your GitHub workflow file (.github/workflows/example.yml)
+name: My Workflow
+on: [push]
 jobs:
-  Explore-GitHub-Actions:
-
-    runs-on: arc-runner-set
+  build:
+    runs-on: arc-runner-set  # Use this label to run on your self-hosted runner
     steps:
-    - run: echo "🎉 This job uses runner scale set runners!"
+      - uses: actions/checkout@v2
+      - name: Run your task
+        run: echo "Running on self-hosted runner!"
