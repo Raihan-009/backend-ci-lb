@@ -1,9 +1,11 @@
-# In your workflow file (.github/workflows/example.yml)
 name: My Workflow
 on: [push]
 jobs:
   build:
     runs-on: arc-runner-set
     steps:
-      - uses: actions/checkout@v2
-      - run: echo "Hello from self-hosted runner!"
+      - uses: actions/checkout@v4
+      
+      # Add kubectl command
+      - name: Check Kubernetes nodes
+        run: kubectl get nodes
