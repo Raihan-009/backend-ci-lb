@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  REPO_NAME: poridhi
+  IMAGE_NAME: todo-backend
+  VERSION: 1.1
+
 jobs:
   build-and-push:
     runs-on: arc-runner-set
@@ -30,11 +35,8 @@ jobs:
       # Step 5: Build and Push using Makefile with dynamic tag
       - name: Build and Push Docker image
         run: |
-          make build-push
-
+          make -v build-push
       # Step 6: Print success message
       - name: Print success message
         run: |
           echo "Successfully built and pushed Docker image"
-          echo "Run number: ${GITHUB_RUN_NUMBER}"
-          echo "Commit SHA: ${GITHUB_SHA::7}"

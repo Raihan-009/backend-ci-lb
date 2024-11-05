@@ -1,5 +1,5 @@
 repo_name:=poridhi
-image_name:=todo-backend
+image_name:=cicd-backend
 tag:=v2.1
 
 build-push:
