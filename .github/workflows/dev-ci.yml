@@ -1,10 +1,17 @@
-# In your GitHub workflow file (.github/workflows/example.yml)
-name: My Workflow
-on: [push]
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
 jobs:
   build:
-    runs-on: arc-runner-set  # Use this label to run on your self-hosted runner
+    runs-on: self-hosted
+    
     steps:
-      - uses: actions/checkout@v2
-      - name: Run your task
-        run: echo "Running on self-hosted runner!"
+      - uses: actions/checkout@v4
+      
+      - name: Check SBT Installation
+        run: sbt --version
