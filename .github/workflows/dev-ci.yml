@@ -5,15 +5,15 @@ on:
     branches:
       - main
 
-env:
-  REPO_NAME: poridhi
-  IMAGE_NAME: todo-backend
-  VERSION: 2.1
-
 jobs:
   build-and-push:
     runs-on: arc-runner-set
-    
+    container:
+      image: docker:dind
+      options: --privileged
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
+
     steps:
       # Step 1: Checkout code
       - name: Checkout code
@@ -24,15 +24,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y make
-
-      # Step 3: Setup Docker
-      - name: Setup Docker
-        run: |
-          sudo systemctl start docker || true
-          sudo systemctl status docker
-          sudo chmod 666 /var/run/docker.sock || true
-          docker info
-
       # Step 4: Login to DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -44,8 +35,3 @@ jobs:
       - name: Build and Push Docker image
         run: |
           make build-push
-
-      # Step 6: Print success message
-      - name: Print success message
-        run: |
-          echo "Successfully built and pushed Docker image"
