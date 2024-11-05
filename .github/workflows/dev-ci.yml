@@ -8,7 +8,7 @@ on:
 env:
   REPO_NAME: poridhi
   IMAGE_NAME: todo-backend
-  VERSION: 1.1
+  VERSION: 2.1
 
 jobs:
   build-and-push:
@@ -35,7 +35,7 @@ jobs:
       # Step 5: Build and Push using Makefile with dynamic tag
       - name: Build and Push Docker image
         run: |
-          make -v build-push
+          make build-push
       # Step 6: Print success message
       - name: Print success message
         run: |
