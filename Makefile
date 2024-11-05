@@ -1,7 +1,7 @@
-repo_name:=poridhi
-image_name:=cicd-backend
-tag:=v2.1
+REPO_NAME:=poridhi
+IMAGE_NAME:=cicd-backend
+VERSION:=v2.1
 
 build-push:
-	@ docker build -t ${repo_name}/${image_name}:${tag} .
-	@ docker push ${repo_name}/${image_name}:${tag}
+	@ docker build -t ${REPO_NAME}/${IMAGE_NAME}:${VERSION} .
+	@ docker push ${REPO_NAME}/${IMAGE_NAME}:${VERSION}
